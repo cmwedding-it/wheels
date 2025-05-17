@@ -10,7 +10,7 @@ env:
 
 jobs:
   check-version-exists:
-    uses: .forgejo/workflows/check-version-exists.yaml
+    uses: ./.forgejo/workflows/check-version-exists.yaml
     with:
       pypi-base-url: ${{ env.REPOSITORY_URL }}
       pypi-package: pycairo
