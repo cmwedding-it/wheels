@@ -1,0 +1,37 @@
+name: Build pycairo
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 10 * * 0"
+
+jobs:
+  build_wheels:
+    name: Build wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    environment: pypi
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: "https://github.com/pygobject/pycairo"
+
+      - name: Set up development headers
+        run: |
+          sudo apt-get install -yqq python3 python3-dev libcairo2
+
+      - name: Build wheels
+        uses: https://github.com/pypa/cibuildwheel@v2.23.3
+ 
+      - name: Publish package distributions to Forgejo
+        uses: https://github.com/pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://git.weddingfactory.eu/api/packages/cmwedding/pypi/simple
+          user: cmwedding-bot
+          password: ${{ secrets.FORGEJO_TOKEN }}
+          packages-dir: ./wheelhouse
+          skip-existing: true
+
