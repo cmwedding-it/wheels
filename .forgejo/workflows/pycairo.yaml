@@ -20,7 +20,7 @@ jobs:
       - name: Build wheels
         uses: https://github.com/pypa/cibuildwheel@v2.23.3
         env:
-          CIBW_BEFORE_ALL_LINUX: "apt-get install -yqq libcairo2"
+          CIBW_BEFORE_ALL_LINUX: "dnf install -y cairo-devel"
           CIBW_BUILD: "cp31{0..3}-manylinux_{x86_64,aarch64}"
           CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
           CIBW_MANYLINUX_AARCH64_IMAGE: manylinux_2_28
