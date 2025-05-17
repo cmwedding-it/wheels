@@ -30,7 +30,7 @@ jobs:
           python3 -m twine upload ./wheelhouse/*
         env:
           TWINE_REPOSITORY_URL: https://git.weddingfactory.eu/api/packages/cmwedding/pypi/simple
-          TWINE_USER: cmwedding-bot
+          TWINE_USERNAME: cmwedding-bot
           TWINE_PASSWORD: ${{ secrets.FORGEJO_TOKEN }}
           TWINE_NON_INTERACTIVE: 1
 
