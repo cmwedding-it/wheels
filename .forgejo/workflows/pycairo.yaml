@@ -19,6 +19,9 @@ jobs:
         with:
           repository: "pygobject/pycairo"
           github-server-url: "https://github.com"
+          token: ""
+          ssh-key: ""
+          persist-credentials: false
 
       - name: Set up development headers
         run: |
