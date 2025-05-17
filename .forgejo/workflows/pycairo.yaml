@@ -15,13 +15,7 @@ jobs:
     environment: pypi
 
     steps:
-      - uses: actions/checkout@v4
-        with:
-          repository: "pygobject/pycairo"
-          github-server-url: "https://github.com"
-          token: ""
-          ssh-key: ""
-          persist-credentials: false
+      - run: git clone --depth=1 https://github.com/pygobject/pycairo .
 
       - name: Set up development headers
         run: |
