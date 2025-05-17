@@ -17,7 +17,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          repository: "https://github.com/pygobject/pycairo"
+          repository: "pygobject/pycairo"
+          github-server-url: "https://github.com"
 
       - name: Set up development headers
         run: |
