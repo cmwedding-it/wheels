@@ -17,13 +17,13 @@ jobs:
     steps:
       - run: git clone --depth=1 https://github.com/pygobject/pycairo .
 
-      - name: Set up development headers
-        run: |
-          sudo apt-get update
-          sudo apt-get install -yqq python3 python3-dev libcairo2
-
       - name: Build wheels
         uses: https://github.com/pypa/cibuildwheel@v2.23.3
+        env:
+          CIBW_BEFORE_ALL_LINUX: "apt-get install -yqq libcairo2"
+          CIBW_BUILD: "cp31{0..3}-manylinux_{x86_64,aarch64}"
+          CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
+          CIBW_MANYLINUX_AARCH64_IMAGE: manylinux_2_28
  
       - name: Publish package distributions to Forgejo
         uses: https://github.com/pypa/gh-action-pypi-publish@release/v1
