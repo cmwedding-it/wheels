@@ -5,16 +5,30 @@ on:
   schedule:
     - cron: "0 10 * * 0"
 
+env:
+  REPOSITORY_URL: https://cmwedding-bot:${{ secrets.FORGEJO_TOKEN }}@git.weddingfactory.eu/api/packages/cmwedding/pypi
+
 jobs:
-  build_wheels:
+  check-version-exists:
+    uses: .forgejo/workflows/check-version-exists.yaml
+    with:
+      pypi-base-url: ${{ env.REPOSITORY_URL }}
+      pypi-package: pycairo
+      github-repository: "pygobject/pycairo"
+
+  build:
     name: Build wheels on ${{ matrix.os }}
+    
+    needs: check-version-exists
+    if: needs.check-version-exists.outputs.version != ""
+
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest]
 
     steps:
-      - run: git clone --depth=1 https://github.com/pygobject/pycairo --branch v1.28.0 .
+      - run: git clone --depth=1 https://github.com/pygobject/pycairo --branch ${{ needs.check-version-exists.outputs.version }} .
 
       - name: Build wheels
         uses: https://github.com/pypa/cibuildwheel@v2.23.3
@@ -29,6 +43,6 @@ jobs:
           pip3 install twine
           python3 -m twine upload ./wheelhouse/*
         env:
-          TWINE_REPOSITORY_URL: https://cmwedding-bot:${{ secrets.FORGEJO_TOKEN }}@git.weddingfactory.eu/api/packages/cmwedding/pypi
+          TWINE_REPOSITORY_URL: ${{ env.REPOSITORY_URL }}
           TWINE_NON_INTERACTIVE: 1
 

@@ -1,0 +1,34 @@
+on:
+  workflow_call:
+    inputs:
+      github-repository:
+        required: true
+        type: string
+      pypi-package:
+        required: true
+        type: string
+      pypi-base-url:
+        required: true
+        type: string
+    outputs:
+      version: ${{ jobs.check-version-exists.outputs.version }}
+
+jobs:
+  check-version-exists:
+    runs-on: ubuntu-latest
+
+    outputs:
+      version: ${{ steps.check.outputs.version }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: check
+        run: |
+          pip3 install requests
+          exec python3 check_version_exists.py >> $GITHUB_OUTPUT 
+        env:
+          REPOSITORY: ${{ inputs.github-repository }}
+          PACKAGE: ${{ inputs.pypi-package}}
+          BASE_URL: ${{ inputs.pypi-base-url}}
+
