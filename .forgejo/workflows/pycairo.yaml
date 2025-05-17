@@ -19,6 +19,7 @@ jobs:
 
       - name: Set up development headers
         run: |
+          sudo apt-get update
           sudo apt-get install -yqq python3 python3-dev libcairo2
 
       - name: Build wheels
