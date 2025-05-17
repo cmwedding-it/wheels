@@ -28,6 +28,7 @@ jobs:
       - name: Publish package distributions to Forgejo
         uses: https://github.com/pypa/gh-action-pypi-publish@release/v1
         with:
+          verbose: true
           repository-url: https://git.weddingfactory.eu/api/packages/cmwedding/pypi/simple
           user: cmwedding-bot
           password: ${{ secrets.FORGEJO_TOKEN }}
