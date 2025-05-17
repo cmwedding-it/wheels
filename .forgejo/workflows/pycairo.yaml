@@ -12,10 +12,9 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-    environment: pypi
 
     steps:
-      - run: git clone --depth=1 https://github.com/pygobject/pycairo .
+      - run: git clone --depth=1 https://github.com/pygobject/pycairo --branch v1.28.0 .
 
       - name: Build wheels
         uses: https://github.com/pypa/cibuildwheel@v2.23.3
@@ -26,12 +25,10 @@ jobs:
           CIBW_MANYLINUX_AARCH64_IMAGE: manylinux_2_28
  
       - name: Publish package distributions to Forgejo
-        uses: https://github.com/pypa/gh-action-pypi-publish@release/v1
-        with:
-          verbose: true
-          repository-url: https://git.weddingfactory.eu/api/packages/cmwedding/pypi/simple
-          user: cmwedding-bot
-          password: ${{ secrets.FORGEJO_TOKEN }}
-          packages-dir: ./wheelhouse
-          skip-existing: true
+        run: |
+          python3 -m twine upload ./wheelhouse/*
+        env:
+          TWINE_REPOSITORY_URL: https://git.weddingfactory.eu/api/packages/cmwedding/pypi/simple
+          TWINE_USER: cmwedding-bot
+          TWINE_PASSWORD: ${{ secrets.FORGEJO_TOKEN }}
 
