@@ -26,7 +26,7 @@ jobs:
       - id: check
         run: |
           pip3 install requests
-          exec python3 check_version_exists.py >> $GITHUB_OUTPUT 
+          exec python3 .forgejo/workflows/check_version_exists.py >> $GITHUB_OUTPUT 
         env:
           REPOSITORY: ${{ inputs.github-repository }}
           PACKAGE: ${{ inputs.pypi-package}}
