@@ -11,11 +11,17 @@ env:
 jobs:
   check-version-exists:
     runs-on: ubuntu-latest
-    uses: ./.forgejo/workflows/check-version-exists.yaml
-    with:
-      pypi-base-url: ${{ env.REPOSITORY_URL }}
-      pypi-package: pycairo
-      github-repository: "pygobject/pycairo"
+
+    outputs:
+      version: ${{ steps.check.outputs.version }}
+
+    steps:
+      - id: check
+        uses: https://git.weddingfactory.eu/wheels@check-action
+        with:
+          pypi-base-url: ${{ env.REPOSITORY_URL }}
+          pypi-package: pycairo
+          github-repository: "pygobject/pycairo"
 
   build:
     name: Build wheels on ${{ matrix.os }}
