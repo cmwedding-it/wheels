@@ -22,7 +22,7 @@ def does_pypi_version_exist(base_url: str, package: str, version: str) -> bool:
 def main():
     repository = os.environ["REPOSITORY"]
     package = os.environ["PACKAGE"]
-    base_url = os.environ["FORGEJO_URL"]
+    base_url = os.environ["BASE_URL"]
 
     version = get_github_version(repository)
 
