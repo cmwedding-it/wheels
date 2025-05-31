@@ -27,7 +27,7 @@ jobs:
     name: Build wheels on ${{ matrix.os }}
     
     needs: check-version-exists
-    if: needs.check-version-exists.outputs.version != ""
+    if: needs.check-version-exists.outputs.version != ''
 
     runs-on: ${{ matrix.os }}
     strategy:
