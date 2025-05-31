@@ -17,7 +17,7 @@ jobs:
 
     steps:
       - id: check
-        uses: https://git.weddingfactory.eu/wheels@check-action
+        uses: https://git.weddingfactory.eu/cmwedding/wheels@check-action
         with:
           pypi-base-url: ${{ env.REPOSITORY_URL }}
           pypi-package: pycairo
