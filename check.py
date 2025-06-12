@@ -31,7 +31,7 @@ def main():
     if does_pypi_version_exist(base_url, package, version):
         sys.exit(0)
 
-    print(f"version=v{version}")
+    print(f"version={version}")
 
 
 if __name__ == "__main__":
