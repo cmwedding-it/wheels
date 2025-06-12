@@ -6,14 +6,11 @@ import sys
 import requests
 
 
-def get_github_version(repository: str) -> str:
-    res = requests.get(f"https://api.github.com/repos/{repository}/releases/latest")
-    
-    if res.status_code == 400:
-        res = requests.get(f"https://api.github.com/repos/{repository}/tags")
-        return res.json()[0]
-
-    return res.json()["tag_name"].removeprefix("v")
+def get_github_version(repository: str) -> str: 
+    try:
+        return requests.get(f"https://api.github.com/repos/{repository}/releases/latest").json()["tag_name"].removeprefix("v")
+    except Exception:
+        return requests.get(f"https://api.github.com/repos/{repository}/tags").json()[0]
 
 
 def does_pypi_version_exist(base_url: str, package: str, version: str) -> bool:
@@ -27,7 +24,7 @@ def does_pypi_version_exist(base_url: str, package: str, version: str) -> bool:
 def main():
     repository = os.environ["REPOSITORY"]
     package = os.environ["PACKAGE"]
-    base_url = os.environ["FORGEJO_URL"]
+    base_url = os.environ["BASE_URL"]
 
     version = get_github_version(repository)
 
