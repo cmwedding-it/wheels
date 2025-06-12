@@ -7,8 +7,13 @@ import requests
 
 
 def get_github_version(repository: str) -> str:
-    res = requests.get(f"https://api.github.com/repos/{repository}/releases/latest").json()
-    return res["tag_name"].removeprefix("v")
+    res = requests.get(f"https://api.github.com/repos/{repository}/releases/latest")
+    
+    if res.status_code == 400:
+        res = requests.get(f"https://api.github.com/repos/{repository}/tags")
+        return res.json()[0]
+
+    return res.json()["tag_name"].removeprefix("v")
 
 
 def does_pypi_version_exist(base_url: str, package: str, version: str) -> bool:
