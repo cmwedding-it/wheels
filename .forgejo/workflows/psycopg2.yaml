@@ -5,6 +5,8 @@ on:
   schedule:
     - cron: "0 10 * * 0"
   push:
+    branches: ["main"]
+    paths: [".forgejo/workflows/psycopg2.yaml"]
 
 env:
   REPOSITORY_URL: https://cmwedding-bot:${{ secrets.FORGEJO_TOKEN }}@git.weddingfactory.eu/api/packages/cmwedding/pypi

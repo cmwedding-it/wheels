@@ -5,6 +5,8 @@ on:
   schedule:
     - cron: "0 10 * * 0"
   push:
+    branches: ["main"]
+    paths: [".forgejo/workflows/pycairo.yaml"]
 
 env:
   REPOSITORY_URL: https://cmwedding-bot:${{ secrets.FORGEJO_TOKEN }}@git.weddingfactory.eu/api/packages/cmwedding/pypi
@@ -36,7 +38,7 @@ jobs:
         os: [ubuntu-latest]
 
     steps:
-      - run: git clone --depth=1 https://github.com/pygobject/pycairo --branch ${{ needs.check-version-exists.outputs.version }} .
+      - run: git clone --depth=1 https://github.com/pygobject/pycairo --branch v${{ needs.check-version-exists.outputs.version }} .
 
       - name: Build wheels
         uses: https://github.com/pypa/cibuildwheel@v2.23.3
