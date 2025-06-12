@@ -10,7 +10,7 @@ def get_github_version(repository: str) -> str:
     try:
         return requests.get(f"https://api.github.com/repos/{repository}/releases/latest").json()["tag_name"].removeprefix("v")
     except Exception:
-        return requests.get(f"https://api.github.com/repos/{repository}/tags").json()[0]
+        return requests.get(f"https://api.github.com/repos/{repository}/tags").json()[0]["name"].removeprefix("v")
 
 
 def does_pypi_version_exist(base_url: str, package: str, version: str) -> bool:
