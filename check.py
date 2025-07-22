@@ -22,12 +22,14 @@ def does_pypi_version_exist(base_url: str, package: str, version: str) -> bool:
 
 
 def main():
-    repository = os.environ["REPOSITORY"]
     package = os.environ["PACKAGE"]
     base_url = os.environ["BASE_URL"]
 
-    version = get_github_version(repository)
-
+    version = os.environ.get(
+        "VERSION",
+        get_github_version(os.environ["REPOSITORY"])
+    )
+    
     if does_pypi_version_exist(base_url, package, version):
         sys.exit(0)
 

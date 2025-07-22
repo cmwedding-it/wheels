@@ -1,16 +1,19 @@
 name: "check-latest-version-exists action"
-description: "Check whether the latest github release/tag of a pypi package exists on a registry. If not, return the latest version"
+description: "Check whether the latest GitHub release/tag of a PyPI package exists on a registry. If not, return the latest version."
 
 inputs:
-  github-repository:
-    description: "The package's Github repository name (owner/repo)"
-    required: true
   pypi-package:
     description: "The name of the package"
     required: true
   pypi-base-url:
-    description: "The pypi registry URL"
+    description: "The PyPI registry URL"
     required: true
+  override-version:
+    description: "Don't check GitHub for the latest version, use this one"
+    required: false
+  github-repository:
+    description: "The package's GitHub repository name (owner/repo). Required if override-version is unset"
+    required: false
 
 outputs:
   version:
@@ -27,6 +30,7 @@ runs:
         exec python3 $GITHUB_ACTION_PATH/check.py >> $GITHUB_OUTPUT 
       env:
         REPOSITORY: ${{ inputs.github-repository }}
-        PACKAGE: ${{ inputs.pypi-package}}
-        BASE_URL: ${{ inputs.pypi-base-url}}
+        PACKAGE: ${{ inputs.pypi-package }}
+        BASE_URL: ${{ inputs.pypi-base-url }}
+        VERSION: ${{ inputs.override-version }}
 
