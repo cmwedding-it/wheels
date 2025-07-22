@@ -8,11 +8,11 @@ inputs:
   pypi-base-url:
     description: "The PyPI registry URL"
     required: true
-  override-version:
-    description: "Don't check GitHub for the latest version, use this one"
-    required: false
   github-repository:
-    description: "The package's GitHub repository name (owner/repo). Required if override-version is unset"
+    description: "The package's GitHub repository name (owner/repo)"
+    required: true
+  unstable-branch:
+    description: "Whether to get a version representing the latest commit on this branch"
     required: false
 
 outputs:
@@ -32,5 +32,5 @@ runs:
         REPOSITORY: ${{ inputs.github-repository }}
         PACKAGE: ${{ inputs.pypi-package }}
         BASE_URL: ${{ inputs.pypi-base-url }}
-        VERSION: ${{ inputs.override-version }}
+        BRANCH: ${{ inputs.unstable-branch }}
 
