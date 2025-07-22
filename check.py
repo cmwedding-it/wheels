@@ -35,7 +35,7 @@ def get_unstable_version(repository: str, branch: str) -> str:
         
         page += 1
 
-    return f"{branch}.{commit_date.strftime("%Y%m%d")}.dev{commit_count}"
+    return f"{branch}.{commit_date.strftime('%Y%m%d')}.dev{commit_count}"
 
 
 def does_pypi_version_exist(base_url: str, package: str, version: str) -> bool:
