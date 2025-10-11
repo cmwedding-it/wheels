@@ -42,7 +42,7 @@ jobs:
         run: |
           rm pyproject.toml
           wget "https://git.weddingfactory.eu/cmwedding/wheels/raw/branch/main/OCB/pyproject.toml"
-          sed -i 's/%s/${{ env.ODOO_VERSION }}/' pyproject.toml
+          sed -i 's/%s/${{ needs.check-version-exists.outputs.version }}/' pyproject.toml
 
       - name: Setup dependencies
         run: |
