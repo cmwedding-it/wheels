@@ -10,7 +10,7 @@ on:
 
 env:
   REPOSITORY_URL: https://cmwedding-bot:${{ secrets.FORGEJO_TOKEN }}@git.weddingfactory.eu/api/packages/cmwedding/pypi
-  ODOO_VERSION: "17.0"
+  ODOO_VERSION: "18.0"
 
 jobs:
   check-version-exists:
@@ -29,15 +29,11 @@ jobs:
           unstable-branch: ${{ env.ODOO_VERSION }}
 
   build:
-    name: Build wheels on ${{ matrix.os }}
+    name: Build wheels
+    runs-on: self-hosted
     
     needs: check-version-exists
     if: needs.check-version-exists.outputs.version != ''
-
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
 
     steps:
       - run: git clone --depth=1 https://github.com/OCA/OCB --branch ${{ env.ODOO_VERSION }} .
@@ -48,19 +44,23 @@ jobs:
           wget "https://git.weddingfactory.eu/cmwedding/wheels/raw/branch/main/OCB/pyproject.toml"
           sed -i 's/%s/${{ env.ODOO_VERSION }}/' pyproject.toml
 
-      - name: Build wheels
-        uses: https://github.com/pypa/cibuildwheel@v2.23.3
-        env:
-          CIBW_BEFORE_BUILD_LINUX: "pip install --index-url https://git.weddingfactory.eu/api/packages/cmwedding/pypi/simple/ psycopg2 pycairo"
-          CIBW_BUILD: "cp31{0..1}-manylinux_{x86_64,aarch64}"
-          CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
-          CIBW_MANYLINUX_AARCH64_IMAGE: manylinux_2_28
- 
+      - name: Setup dependencies
+        run: |
+          python3 -m venv .venv
+          source .venv/bin/activate
+
+          pip3 install build wheel setuptools twine
+          pip3 install --index-url https://git.weddingfactory.eu/api/packages/cmwedding/pypi/simple/ psycopg2 pycairo
+
+      - name: Build pure Python wheel
+        run: |
+          source .venv/bin/activate
+          python3 -m build --wheel
+
       - name: Publish package distributions to Forgejo
         run: |
-          pip3 install twine
-          python3 -m twine upload ./wheelhouse/*
+          source .venv/bin/activate
+          python3 -m twine upload ./dist/*
         env:
           TWINE_REPOSITORY_URL: ${{ env.REPOSITORY_URL }}
           TWINE_NON_INTERACTIVE: 1
-
