@@ -52,8 +52,14 @@ jobs:
  
       - name: Publish package distributions to Forgejo
         run: |
-          pip3 install twine
-          python3 -m twine upload ./wheelhouse/*
+          python -m venv venv
+          source venv/bin/activate
+
+          pip install twine
+          python -m twine upload ./wheelhouse/*
+        
+          deactivate
+          rm -rf venv
         env:
           TWINE_REPOSITORY_URL: ${{ env.REPOSITORY_URL }}
           TWINE_NON_INTERACTIVE: 1
