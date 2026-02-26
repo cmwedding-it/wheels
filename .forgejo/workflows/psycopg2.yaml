@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - id: check
-        uses: https://git.weddingfactory.eu/cmwedding/wheels@f3ba8cbc3c3e080b14c8f244e531eaf36102959a
+        uses: https://git.weddingfactory.eu/cmwedding/wheels@check-action
         with:
           pypi-base-url: ${{ env.REPOSITORY_URL }}
           pypi-package: psycopg2
