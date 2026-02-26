@@ -38,6 +38,11 @@ jobs:
       - name: Checkout
         run: git clone --depth=1 https://github.com/pygobject/pycairo --branch v${{ needs.check-version-exists.outputs.version }} .
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
+      
       - name: Build wheels
         uses: https://github.com/pypa/cibuildwheel@v2.23.3
         env:
