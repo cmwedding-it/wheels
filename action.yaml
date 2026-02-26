@@ -26,8 +26,13 @@ runs:
     - id: check
       shell: bash
       run: |
-        pip3 install requests
-        exec python3 $GITHUB_ACTION_PATH/check.py >> $GITHUB_OUTPUT 
+        python -m venv venv
+        source venv/bin/activate
+        
+        python3 $GITHUB_ACTION_PATH/check.py >> $GITHUB_OUTPUT 
+        deactivate
+
+        rm -rf venv
       env:
         REPOSITORY: ${{ inputs.github-repository }}
         PACKAGE: ${{ inputs.pypi-package }}
