@@ -20,38 +20,44 @@ jobs:
 
     steps:
       - id: check
-        uses: https://git.weddingfactory.eu/cmwedding/wheels@f3ba8cbc3c3e080b14c8f244e531eaf36102959a
+        uses: https://git.weddingfactory.eu/cmwedding/wheels@check-action
         with:
           pypi-base-url: ${{ env.REPOSITORY_URL }}
           pypi-package: pycairo
           github-repository: "pygobject/pycairo"
 
   build:
-    name: Build wheels on ${{ matrix.os }}
+    name: Build wheels
     
     needs: check-version-exists
     if: needs.check-version-exists.outputs.version != ''
 
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
+    runs-on: ubuntu-latest
 
     steps:
-      - run: git clone --depth=1 https://github.com/pygobject/pycairo --branch v${{ needs.check-version-exists.outputs.version }} .
+      - name: Checkout
+        run: git clone --depth=1 https://github.com/pygobject/pycairo --branch v${{ needs.check-version-exists.outputs.version }} .
 
       - name: Build wheels
         uses: https://github.com/pypa/cibuildwheel@v2.23.3
         env:
           CIBW_BEFORE_ALL_LINUX: "dnf install -y cairo-devel"
+          CIBW_ARCHS_LINUX: "x86_64 aarch64"
           CIBW_BUILD: "cp31{0..3}-manylinux_{x86_64,aarch64}"
           CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
           CIBW_MANYLINUX_AARCH64_IMAGE: manylinux_2_28
- 
+          CIBW_TEST_SKIP: "*_aarch64"
+
       - name: Publish package distributions to Forgejo
         run: |
-          pip3 install twine
-          python3 -m twine upload ./wheelhouse/*
+          python -m venv venv
+          source venv/bin/activate
+
+          pip install twine
+          python -m twine upload ./wheelhouse/*
+
+          deactivate
+          rm -rf venv
         env:
           TWINE_REPOSITORY_URL: ${{ env.REPOSITORY_URL }}
           TWINE_NON_INTERACTIVE: 1
