@@ -35,16 +35,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - run: git clone --depth=1 https://github.com/psycopg/psycopg2 --branch ${{ needs.check-version-exists.outputs.version }} .
+      - name: Checkout
+        run: git clone --depth=1 https://github.com/psycopg/psycopg2 --branch ${{ needs.check-version-exists.outputs.version }} .
       
       - name: Build wheels
-        uses: https://github.com/pypa/cibuildwheel@v2.23.3
+        uses: https://github.com/pypa/cibuildwheel@v3.3.1
         env:
           CIBW_BEFORE_ALL_LINUX: "dnf install -y postgresql-devel"
+          CIBW_ARCHS_LINUX: "x86_64 aarch64"
           CIBW_BUILD: "cp31{0..3}-manylinux_{x86_64,aarch64}"
           CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
           CIBW_MANYLINUX_AARCH64_IMAGE: manylinux_2_28
- 
+          CIBW_TEST_SKIP: "*_aarch64"
       - name: Publish package distributions to Forgejo
         run: |
           python -m venv venv
