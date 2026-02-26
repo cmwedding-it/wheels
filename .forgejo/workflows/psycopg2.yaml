@@ -27,19 +27,21 @@ jobs:
           github-repository: "psycopg/psycopg2"
 
   build:
-    name: Build wheels on ${{ matrix.os }}
+    name: Build wheels
     
     needs: check-version-exists
     if: needs.check-version-exists.outputs.version != ''
 
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
+    runs-on: ubuntu-latest
 
     steps:
       - run: git clone --depth=1 https://github.com/psycopg/psycopg2 --branch ${{ needs.check-version-exists.outputs.version }} .
 
+      - name: Set up QEMU
+        uses: https://github.com/docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
+      
       - name: Build wheels
         uses: https://github.com/pypa/cibuildwheel@v2.23.3
         env:
