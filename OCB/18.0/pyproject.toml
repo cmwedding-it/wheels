@@ -1,0 +1,19 @@
+[project]
+name = "odoo"
+version = "%s"
+dynamic = [
+    "optional-dependencies",
+    "dependencies",
+    "classifiers",
+    "authors",
+    "license",
+    "requires-python",
+    "readme",
+    "description"
+]
+
+[build-system]
+requires = ["setuptools>=41"]
+build-backend = "pep517_odoo"
+backend-path = ["setup"]
+

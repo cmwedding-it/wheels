@@ -1,0 +1,28 @@
+From a11886862b4f0917a9875f48e380639d010e70ee Mon Sep 17 00:00:00 2001
+From: Oskar Manhart <52569953+oskardotglobal@users.noreply.github.com>
+Date: Sat, 28 Feb 2026 13:30:08 +0100
+Subject: [PATCH] fix(pos): ignore bad result from create_from_ui
+
+---
+ addons/point_of_sale/static/src/app/store/pos_store.js | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/addons/point_of_sale/static/src/app/store/pos_store.js b/addons/point_of_sale/static/src/app/store/pos_store.js
+index b35796f5..414a2c0d 100644
+--- a/addons/point_of_sale/static/src/app/store/pos_store.js
++++ b/addons/point_of_sale/static/src/app/store/pos_store.js
+@@ -1369,6 +1369,11 @@ export class PosStore extends Reactive {
+                     context: this._getCreateOrderContext(ordersToSync, options),
+                 }
+             );
++            
++            if (!(serverIds instanceof Array)) {
++                console.warn("RPC create_from_ui returned no result, ignoring...");
++                serverIds = [];
++            }
+ 
+             for (const serverId of serverIds) {
+                 const order = this.env.services.pos.orders.find(
+-- 
+2.51.2
+
