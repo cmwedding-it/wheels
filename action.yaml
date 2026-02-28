@@ -29,7 +29,7 @@ runs:
         python -m venv venv
         source venv/bin/activate
 
-        pip install requests
+        pip3 install requests
         python3 $GITHUB_ACTION_PATH/check.py >> $GITHUB_OUTPUT 
         
         deactivate
