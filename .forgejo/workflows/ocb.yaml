@@ -13,12 +13,12 @@ env:
 
 jobs:
   build:
-    name: Build wheels
-    runs-on: ubuntu-latest
-
     strategy:
       matrix:
         odoo: ["17.0", "18.0"]
+
+    name: Build wheels for ${{ matrix.odoo }}
+    runs-on: ubuntu-latest
 
     steps:
       - id: check
