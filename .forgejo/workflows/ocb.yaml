@@ -42,6 +42,9 @@ jobs:
           cd src/
 
           if [[ -d "../OCB/${{ matrix.odoo }}/patches" ]]; then
+            git config --global user.email "ci@git.weddingfactory.eu"
+            git config --global user.name "cmwedding[bot]"
+
             git am "../OCB/${{ matrix.odoo }}/patches"/*
           fi
 
