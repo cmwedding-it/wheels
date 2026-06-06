@@ -40,6 +40,7 @@ jobs:
         run: |
           cp runbot/pyproject.toml src/
           sed -i 's/%s/${{ steps.check.outputs.version }}/' src/pyproject.toml
+          touch src/runbot_builder/__init__.py
 
       - name: Setup dependencies
         if: steps.check.outputs.version != ''
