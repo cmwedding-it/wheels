@@ -1,0 +1,13 @@
+[project]
+name = "odoo-addons-runbot"
+version = "%s"
+
+[build-system]
+requires = ["hatchling", "hatch-odoo"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["runbot_builder"]
+
+[tool.hatch.build.targets.wheel.hooks.hatch-odoo]
+addons-dirs = ["."]

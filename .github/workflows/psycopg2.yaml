@@ -6,7 +6,7 @@ on:
     - cron: "0 10 * * 0"
   push:
     branches: ["main"]
-    paths: [".forgejo/workflows/psycopg2.yaml"]
+    paths: [".github/workflows/psycopg2.yaml"]
 
 env:
   REPOSITORY_URL: https://cmwedding-bot:${{ secrets.FORGEJO_TOKEN }}@git.weddingfactory.eu/api/packages/cmwedding/pypi
@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - id: check
-        uses: https://git.weddingfactory.eu/cmwedding/wheels@check-action
+        uses: cmwedding-it/wheels@check-action
         with:
           pypi-base-url: ${{ env.REPOSITORY_URL }}
           pypi-package: psycopg2
@@ -28,7 +28,7 @@ jobs:
 
   build:
     name: Build wheels
-    
+
     needs: check-version-exists
     if: needs.check-version-exists.outputs.version != ''
 
@@ -42,9 +42,9 @@ jobs:
         uses: docker/setup-qemu-action@v3
         with:
           platforms: arm64
-      
+
       - name: Build wheels
-        uses: https://github.com/pypa/cibuildwheel@v3.3.1
+        uses: pypa/cibuildwheel@v3.3.1
         env:
           CIBW_BEFORE_ALL_LINUX: "dnf install -y postgresql-devel"
           CIBW_ARCHS_LINUX: "x86_64 aarch64"
@@ -60,10 +60,9 @@ jobs:
 
           pip install twine
           python -m twine upload ./wheelhouse/*
-        
+
           deactivate
           rm -rf venv
         env:
           TWINE_REPOSITORY_URL: ${{ env.REPOSITORY_URL }}
           TWINE_NON_INTERACTIVE: 1
-
