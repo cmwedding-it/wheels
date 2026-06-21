@@ -15,9 +15,11 @@ env:
   REPOSITORY_URL: https://cmwedding-bot:${{ secrets.FORGEJO_TOKEN }}@git.weddingfactory.eu/api/packages/cmwedding/pypi
 
 jobs:
-  build:
-    name: Build runbot wheel
+  check-version-exists:
     runs-on: ubuntu-latest
+
+    outputs:
+      version: ${{ steps.check.outputs.version }}
 
     steps:
       - id: check
@@ -28,36 +30,39 @@ jobs:
           github-repository: "odoo/runbot"
           unstable-branch: ${{ env.ODOO_VERSION }}
 
+  build:
+    name: Build wheel
+    runs-on: ubuntu-latest
+
+    needs: check-version-exists
+    if: needs.check-version-exists.outputs.version != ''
+
+    steps:
       - name: Check out self
         uses: actions/checkout@v4
 
       - name: Check out source
-        if: steps.check.outputs.version != ''
         run: git clone --depth=1 https://github.com/odoo/runbot --branch ${{ env.ODOO_VERSION }} src/
 
       - name: Prepare package
-        if: steps.check.outputs.version != ''
         run: |
           cp runbot/pyproject.toml src/
-          sed -i 's/%s/${{ steps.check.outputs.version }}/' src/pyproject.toml
+          sed -i 's/%s/${{ needs.check-version-exists.outputs.version }}/' src/pyproject.toml
           touch src/runbot_builder/__init__.py
 
       - name: Setup dependencies
-        if: steps.check.outputs.version != ''
         run: |
           python3 -m venv .venv
           source .venv/bin/activate
           pip3 install hatch hatch-odoo twine
 
       - name: Build wheel
-        if: steps.check.outputs.version != ''
         run: |
           source .venv/bin/activate
           cd src/
           hatch build -t wheel
 
       - name: Publish package
-        if: steps.check.outputs.version != ''
         env:
           TWINE_REPOSITORY_URL: ${{ env.REPOSITORY_URL }}
           TWINE_NON_INTERACTIVE: 1
