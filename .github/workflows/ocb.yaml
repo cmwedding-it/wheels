@@ -29,6 +29,10 @@ jobs:
           github-repository: "OCA/OCB"
           unstable-branch: ${{ matrix.odoo }}
 
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13' 
+
       - name: Check out self
         uses: actions/checkout@v7
 
