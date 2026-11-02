@@ -30,7 +30,7 @@ jobs:
           unstable-branch: ${{ matrix.odoo }}
 
       - name: Check out self
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Check out source
         if: steps.check.outputs.version != ''
@@ -58,7 +58,7 @@ jobs:
           source .venv/bin/activate
 
           pip3 install build wheel setuptools twine
-          pip3 install --index-url https://git.weddingfactory.eu/api/packages/cmwedding/pypi/simple/ psycopg2 pycairo
+          pip3 install --index-url ${{ env.REPOSITORY_URL }}/simple/ psycopg2 pycairo
 
       - name: Build pure Python wheel
         if: steps.check.outputs.version != ''
