@@ -15,7 +15,7 @@ jobs:
   build:
     strategy:
       matrix:
-        odoo: ["18.0", "19.0"]
+        odoo: ["19.0"]
 
     name: Build wheels for ${{ matrix.odoo }}
     runs-on: ubuntu-latest
